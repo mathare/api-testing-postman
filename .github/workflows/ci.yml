@@ -30,4 +30,4 @@ jobs:
         run: npm install newman
 
       - name: Run Postman tests
-        run: newman run "JSON Placeholder.postman_collection.json" -e "JSON Placeholder.postman_environment.json"
+        run: newman run "JSON Placeholder.postman_collection.json" -e "JSON Placeholder Env.postman_environment.json"
