@@ -882,36 +882,7 @@
 									"",
 									"pm.test(\"Response body is correct\", function() {",
 									"    pm.expect(jsonData).to.eql(expectedResponse);",
-									"});",
-									"",
-									"// // If the response body doesn't match the expected response for whatever reason the above test doesn't really help diagnose where the actual and expected responses differ. Therefore, if they do differ, run a set of tests that will show where the differences are",
-									"// if(JSON.stringify(jsonData) != JSON.stringify(expectedResponse)) {",
-									"//     for (var i = 0; i < jsonData.length; i++) {",
-									"//         pm.test(\"Post \" + (i+1) + \" is correct\", function() {",
-									"//             pm.expect(jsonData[i]).to.eql(expectedResponse[i]);",
-									"//         });",
-									"",
-									"//         if (JSON.stringify(jsonData[i]) != JSON.stringify(expectedResponse[i])) {",
-									"//             pm.test(\"Post \" + (i+1) + \" - User ID is correct\", function() {",
-									"//                 pm.expect(jsonData[i].userId).to.eql(expectedResponse[i].userId);",
-									"//             });",
-									"",
-									"//             pm.test(\"Post \" + (i+1) + \" - ID is correct\", function() {",
-									"//                 pm.expect(jsonData[i].id).to.eql(expectedResponse[i].id);",
-									"//             });",
-									"",
-									"//             pm.test(\"Post \" + (i+1) + \" - Title is correct\", function() {",
-									"//                 pm.expect(jsonData[i].title).to.eql(expectedResponse[i].title);",
-									"//             });",
-									"",
-									"//             pm.test(\"Post \" + (i+1) + \" - Body is correct\", function() {",
-									"//                 pm.expect(jsonData[i].body).to.eql(expectedResponse[i].body);",
-									"//             });",
-									"//         }",
-									"//     };",
-									"// };",
-									"",
-									"// pm.environment.unset(\"expectedResponse\");"
+									"});"
 								]
 							}
 						}
@@ -971,9 +942,7 @@
 							"script": {
 								"type": "text/javascript",
 								"exec": [
-									"var expectedResponse = {};",
-									"",
-									"pm.environment.set(\"expectedResponse\", expectedResponse);"
+									""
 								]
 							}
 						},
@@ -983,10 +952,9 @@
 								"type": "text/javascript",
 								"exec": [
 									"var jsonData = pm.response.json();",
-									"var expectedResponse = pm.environment.get(\"expectedResponse\");",
 									"",
 									"pm.test(\"Response body is correct\", function() {",
-									"    pm.expect(jsonData).to.eql(expectedResponse);",
+									"    pm.expect(jsonData).to.eql({});",
 									"});"
 								]
 							}
