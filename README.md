@@ -159,5 +159,5 @@ This project contains an implementation of a CI pipeline using [GitHub actions](
 * installs npm
 * installs Newman (via npm)
 * runs the Postman collection via Newman (using the specified environment file)
-At the end of the steps the environment tears itself down and produces a [status report](https://github.com/mathare-boilerplate/api-postman/actions)
+At the end of the steps the environment tears itself down and produces a [status report](https://github.com/mathare-boilerplate-api-postman/actions)
 
