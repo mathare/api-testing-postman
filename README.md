@@ -1,14 +1,14 @@
-# REST API Testing with Postman - Boilerplate
+# REST API Testing with Postman
 
 ## Overview
-This project provides a boilerplate for testing REST APIs with Postman. It can be used to kickstart testing of other REST APIs with minimal changes to the project.
+This project provides an example for testing REST APIs with Postman. It can be used to kickstart testing of other REST APIs with minimal changes to the project.
 
-NB This is not a complete implementation of a Postman test suite for the target API. It is and example of how to structure a Postman test suite but only a subset of the requests (tests) have been added.
+NB This is not a complete implementation of a Postman test suite for the target API. It is an example of how to structure a Postman test suite but only a subset of the requests (tests) have been added.
 
 ### Why use Postman?
 [Postman](https://www.postman.com/) is a popular and easy-to-use API testing tool. It is simple to build & send requests and examine the responses, making it popular for exploratory and manual testing of APIs. However, Postman is capable of much more and is often overlooked as an automated API testing tool. 
 
-Postman tests are written using JavaScript and the [Chai](https://www.chaijs.com/api/bdd/) assertion library. There is no support for other languages and the Postman syntax can be a little strange if you're not used to it, even if you're an experienced JavaScript code but at the same time there are a number of code snippets provided within Postman to help you create your tests. Often people use the code snippet to write tests to perform simple response code checks but may not go beyond this. I want to show how more detailed tests can be written - and easily maintained - within Postman. 
+Postman tests are written using JavaScript and the [Chai](https://www.chaijs.com/api/bdd/) assertion library. There is no support for other languages and the Postman syntax can be a little strange if you're not used to it, even if you're an experienced JavaScript coder but at the same time there are a number of code snippets provided within Postman to help you create your tests. Often people use the code snippets to perform simple response code checks but may not go beyond this. I want to show how more detailed tests can be written - and easily maintained - within Postman. 
 
 #### Pricing
 
@@ -148,6 +148,7 @@ The tests for each request will automatically be run when the corresponding requ
 * run the entire collection
 * run all tests in an individual folder
 * send an individual request
+
 If the JSON Placeholder Env environment file is not selected the requests will fail to send (as the URI will be undefined).
 
 The [Newman](https://learning.postman.com/docs/running-collections/using-newman-cli/command-line-integration-with-newman) command line runner can also be used.
@@ -159,5 +160,6 @@ This project contains an implementation of a CI pipeline using [GitHub actions](
 * installs npm
 * installs Newman (via npm)
 * runs the Postman collection via Newman (using the specified environment file)
-At the end of the steps the environment tears itself down and produces a [status report](https://github.com/mathare-boilerplate-api-postman/actions)
+
+At the end of the steps the environment tears itself down and produces a [status report](https://github.com/mathare-api-testing-postman/actions)
 
