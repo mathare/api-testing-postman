@@ -8,11 +8,11 @@ NB This is not a complete implementation of a Postman test suite for the target 
 ### Why use Postman?
 [Postman](https://www.postman.com/) is a popular and easy-to-use API testing tool. It is simple to build & send requests and examine the responses, making it popular for exploratory and manual testing of APIs. However, Postman is capable of much more and is often overlooked as an automated API testing tool. 
 
-Postman tests are written using JavaScript and the [Chai](https://www.chaijs.com/api/bdd/) assertion library. There is no support for other languages and the Postman syntax can be a little strange if you're not used to it, even if you're an experienced JavaScript coder but at the same time there are a number of code snippets provided within Postman to help you create your tests. Often people use the code snippets to perform simple response code checks but may not go beyond this. I want to show how more detailed tests can be written - and easily maintained - within Postman. 
+Postman tests are written using JavaScript and the [Chai](https://www.chaijs.com/api/bdd/) assertion library. There is no support for other languages, and the Postman syntax can be a little strange if you're not used to it, even if you're an experienced JavaScript coder but at the same time there are a number of code snippets provided within Postman to help you create your tests. Often people use the code snippets to perform simple response code checks but may not go beyond this. I want to show how more detailed tests can be written - and easily maintained - within Postman. 
 
 #### Pricing
 
-Postman has a free tier to their pricing plan which allows up to 3 users to access the basic functionality. This tier is adequate for this test suite i.e. the tests can be run without cost. That same plan will also support a significant expansion of the current test suite and creation of further test suites for other APIs (the number of APIs and requests that can be made is unlimited in the free tier) so it remains a cost-effective option for API testing. As more collaboration between team members (e.g. developers and QA), or significant mocking functionality is required then a paid plan will be necessary.
+Postman has a free tier to their pricing plan which allows up to 3 users to access the basic functionality. This tier is adequate for this test suite i.e. the tests can be run without cost. That same plan will also support a significant expansion of the current test suite and creation of further test suites for other APIs (the number of APIs and requests that can be made is unlimited in the free tier), so it remains a cost-effective option for API testing. As more collaboration between team members (e.g. developers and QA), or significant mocking functionality is required then a paid plan will be necessary.
 
 ## REST API
 The API tested here is the [JSON Placeholder](https://jsonplaceholder.typicode.com) API, a free fake API for testing and prototyping. The API has six endpoints across a number of different types:
@@ -34,7 +34,7 @@ The Postman test suite here is made up of two separate files:
 
 The first file is the Postman collection - this contains all the individual requests and tests and as such is the main file within the test suite. The second file is the Postman environment - primarily used to enable fast switching between different configurations e.g. test and production environments.
 
-Both files are in JSON format so can be edited in any text editor but I wouldn't recommend it. I suggest only opening and editing the files via Postman itself to ensure the right formatting of the files.
+Both files are in JSON format so can be edited in any text editor, but I wouldn't recommend it. I suggest only opening and editing the files via Postman itself to ensure the right formatting of the files.
 
 ### Postman Collection
 The Postman collection is a JSON structure containing all the API requests and the associated tests. The collection itself is hierarchical with three main components:
@@ -74,6 +74,8 @@ As an example, a GET request to the `/posts` endpoint is expected to return a 20
     
 In some cases it is necessary to introduce further structure to the project with sub-folders added below the status code folders. This may be required when the schema of the responses may differ even though the status code is the same e.g. separating responses that return an array of results from those that return a single response. This is all to simplify the actual test code.
 
+There is also a Workflows folder at the top level of the collection, containing sub-folders of daisy-chained requests for test cases that require more than one request to be sent.
+
 ### Tests
 The Postman collection structure may look unnecessarily complicated but is an essential part of the testing. The aim is to minimise the amount of test code that needs to be written by defining tests at the relevant folder level rather than duplicating the code across all requests within that folder. This way we maintain good software development and coding principles such as DRY (Don't Repeat Yourself) and make it easier to maintain the test suite going forward, especially if changes are required.
 
@@ -90,13 +92,13 @@ Rather than add each test to each request we use the project structure, defining
 
 There is no pre-request script.
 
-The response time test is created here at the collection level and thus applied to all requests within the collection. The maximum expected response time is obtained from an environment variable and an assertion checks the actual response time is less than that maximum. If we want to change this test we can change the code here and it will affect all requests in the collection.
+The response time test is created here at the collection level and thus applied to all requests within the collection. The maximum expected response time is obtained from an environment variable, and an assertion checks the actual response time is less than that maximum. If we want to change this test we can change the code here, and it will affect all requests in the collection.
 
 **Posts** (folder)
 
 There is no pre-request script.
 
-This is where we test the response is in JSON format. This is done by checking that the `content-type` header is present and that is it set to `application/json` as well as using an in-built assertion that the response is in JSON format. It's a belt and braces check but it given the minimal additional overhead it is worth doing.
+This is where we test the response is in JSON format. This is done by checking that the `content-type` header is present and that is it set to `application/json` as well as using an in-built assertion that the response is in JSON format. It's a belt and braces check, but it given the minimal additional overhead it is worth doing.
 
 The equivalent folders for the other endpoints (comments, photos etc) would do the same. If the response for all endpoints was expected to be JSON this test could be moved to the parent collection rather than duplicating it across all endpoint folders.
 
@@ -130,6 +132,31 @@ There are no tests on the request.
 
 Other requests are similar but with different expected response bodies declared in the pre-request script.
 
+#### Workflow Tests
+In this example project only a single workflow test has been implemented - demonstrating an equivalence between the Posts and Comments endpoints. One can obtain the comments for a given post ID via the Posts endpoint by appending `/comments` to the request URL. One can also use the post ID as a query parameter in a request to the Comments endpoint. Both requests should return the same response (for the same post ID), which is what this workflow test shows. Let's look at how this is structured.
+
+**Workflow Tests** (folder)
+
+This is just a structural folder with no pre-request script or tests.
+
+**Posts & Comments Endpoint Equivalence** (folder)
+
+The pre-request script defines the JSON schema for a response containing an array of comments and writes this to a `commentsSchema` environment variable.
+
+All the tests for this workflow are defined at this folder level. We verify the response has a status code of 200, that the response is in JSON format, the schema is correct, the results are an array (with at least 1 element) and finally that the response body contents are as expected.
+
+**Get Post 1 Comments (Post Endpoint)** (request)
+
+The expected response is declared in the pre-request script and is stored in a variable in the environment file. 
+
+There are no tests for the request but there is a single line of code to set the next request (equivalent to a 'go to'), which is how we ensure these requests are daisy-chained.
+
+**Get Post 1 Comments (Comments Endpoint)** (request)
+
+There is no pre-request script and no tests in this request.
+
+This request runs the tests defined at the folder level above, using the expected response declared in the previous request. This way we show that both requests in this workflow folder are equivalent.
+
 ### Pros & Cons
 **Pros**
 * Good software engineering principles are adopted (e.g. DRY)
@@ -161,5 +188,5 @@ This project contains an implementation of a CI pipeline using [GitHub actions](
 * installs Newman (via npm)
 * runs the Postman collection via Newman (using the specified environment file)
 
-At the end of the steps the environment tears itself down and produces a [status report](https://github.com/mathare-api-testing-postman/actions)
+At the end of the steps the environment tears itself down and produces a [status report](https://github.com/mathare/api-testing-postman/actions)
 
