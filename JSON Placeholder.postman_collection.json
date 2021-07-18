@@ -988,6 +988,222 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "Workflow Tests",
+			"item": [
+				{
+					"name": "Posts & Comments Endpoint Equivalence",
+					"item": [
+						{
+							"name": "Get Post 1 Comments (Posts Endpoint)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var expectedResponse = [\r",
+											"    {\r",
+											"        \"postId\": 1,\r",
+											"        \"id\": 1,\r",
+											"        \"name\": \"id labore ex et quam laborum\",\r",
+											"        \"email\": \"Eliseo@gardner.biz\",\r",
+											"        \"body\": \"laudantium enim quasi est quidem magnam voluptate ipsam eos\\ntempora quo necessitatibus\\ndolor quam autem quasi\\nreiciendis et nam sapiente accusantium\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"postId\": 1,\r",
+											"        \"id\": 2,\r",
+											"        \"name\": \"quo vero reiciendis velit similique earum\",\r",
+											"        \"email\": \"Jayne_Kuhic@sydney.com\",\r",
+											"        \"body\": \"est natus enim nihil est dolore omnis voluptatem numquam\\net omnis occaecati quod ullam at\\nvoluptatem error expedita pariatur\\nnihil sint nostrum voluptatem reiciendis et\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"postId\": 1,\r",
+											"        \"id\": 3,\r",
+											"        \"name\": \"odio adipisci rerum aut animi\",\r",
+											"        \"email\": \"Nikita@garfield.biz\",\r",
+											"        \"body\": \"quia molestiae reprehenderit quasi aspernatur\\naut expedita occaecati aliquam eveniet laudantium\\nomnis quibusdam delectus saepe quia accusamus maiores nam est\\ncum et ducimus et vero voluptates excepturi deleniti ratione\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"postId\": 1,\r",
+											"        \"id\": 4,\r",
+											"        \"name\": \"alias odio sit\",\r",
+											"        \"email\": \"Lew@alysha.tv\",\r",
+											"        \"body\": \"non et atque\\noccaecati deserunt quas accusantium unde odit nobis qui voluptatem\\nquia voluptas consequuntur itaque dolor\\net qui rerum deleniti ut occaecati\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"postId\": 1,\r",
+											"        \"id\": 5,\r",
+											"        \"name\": \"vero eaque aliquid doloribus et culpa\",\r",
+											"        \"email\": \"Hayden@althea.biz\",\r",
+											"        \"body\": \"harum non quasi et ratione\\ntempore iure ex voluptates in ratione\\nharum architecto fugit inventore cupiditate\\nvoluptates magni quo et\"\r",
+											"    }\r",
+											"];\r",
+											"\r",
+											"pm.environment.set(\"expectedResponse\", expectedResponse);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"postman.setNextRequest(\"Get Post 1 Comments (Comments Endpoint)\")"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}{{postsEndpoint}}/1/comments",
+									"host": [
+										"{{url}}{{postsEndpoint}}"
+									],
+									"path": [
+										"1",
+										"comments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Post 1 Comments (Comments Endpoint)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}{{commentsEndpoint}}?postId=1",
+									"host": [
+										"{{url}}{{commentsEndpoint}}"
+									],
+									"query": [
+										{
+											"key": "postId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var schema = {",
+									"    \"type\": \"array\",",
+									"    \"items\": {",
+									"        \"type\": \"object\",",
+									"        \"properties\": {",
+									"            \"postId\": {",
+									"                \"type\": \"integer\"",
+									"            },",
+									"            \"id\": {",
+									"                \"type\": \"integer\"",
+									"            },",
+									"            \"name\": {",
+									"                \"type\": \"string\"",
+									"            },",
+									"            \"email\": {",
+									"                \"type\": \"string\"",
+									"            },",
+									"            \"body\": {",
+									"                \"type\": \"string\"",
+									"            }",
+									"        },",
+									"        \"required\": [",
+									"            \"postId\",",
+									"            \"id\",",
+									"            \"name\",",
+									"            \"email\",",
+									"            \"body\"",
+									"        ],",
+									"        \"additionalProperties\": false",
+									"    },",
+									"    \"additionalProperties\": false",
+									"};",
+									"",
+									"pm.environment.set(\"commentsSchema\", JSON.stringify(schema));"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var schema = JSON.parse(pm.environment.get(\"commentsSchema\"));",
+									"var expectedResponse = pm.environment.get(\"expectedResponse\");",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is in JSON format\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"    var contentType = pm.response.headers.get(\"Content-Type\");",
+									"    pm.expect(contentType).to.include(\"application/json\");",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Posts returned in response body as an array\", function() {",
+									"    pm.expect(jsonData).is.an(\"array\");",
+									"    pm.expect(jsonData.length).to.be.above(0);",
+									"});",
+									"",
+									"pm.test(\"Schema is valid\", function() {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});",
+									"",
+									"pm.test(\"Response body is correct\", function () {",
+									"    pm.expect(jsonData).to.eql(expectedResponse);",
+									"});",
+									"",
+									"// If the response body doesn't match the expected response for whatever reason, it can be hard diagnose where the actual and expected responses differ. Therefore, if they do differ, run a set of tests that will show where the differences are",
+									"if(JSON.stringify(jsonData) != JSON.stringify(expectedResponse)) {",
+									"    for (var i = 0; i < jsonData.length; i++) {",
+									"        pm.test(\"Post \" + (i+1) + \" is correct\", function() {",
+									"            pm.expect(jsonData[i]).to.eql(expectedResponse[i]);",
+									"        });",
+									"",
+									"        if (JSON.stringify(jsonData[i]) != JSON.stringify(expectedResponse[i])) {",
+									"            pm.test(\"Post \" + (i+1) + \" - Post ID is correct\", function() {",
+									"                pm.expect(jsonData[i].postId).to.eql(expectedResponse[i].postId);",
+									"            });",
+									"",
+									"            pm.test(\"Post \" + (i+1) + \" - ID is correct\", function() {",
+									"                pm.expect(jsonData[i].id).to.eql(expectedResponse[i].id);",
+									"            });",
+									"",
+									"            pm.test(\"Post \" + (i+1) + \" - Name is correct\", function() {",
+									"                pm.expect(jsonData[i].name).to.eql(expectedResponse[i].name);",
+									"            });",
+									"",
+									"            pm.test(\"Post \" + (i+1) + \" - Email is correct\", function() {",
+									"                pm.expect(jsonData[i].email).to.eql(expectedResponse[i].email);",
+									"            });",
+									"",
+									"            pm.test(\"Post \" + (i+1) + \" - Body is correct\", function() {",
+									"                pm.expect(jsonData[i].body).to.eql(expectedResponse[i].body);",
+									"            });",
+									"        }",
+									"    };",
+									"};"
+								]
+							}
+						}
+					]
+				}
+			]
 		}
 	],
 	"event": [
