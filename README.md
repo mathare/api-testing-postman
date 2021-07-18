@@ -1,3 +1,5 @@
+[![Continuous Integration Status](https://github.com/mathare/api-testing-postman/actions/workflows/ci.yml/badge.svg)](https://github.com/mathare/api-testing-postman/actions)
+
 # REST API Testing with Postman
 
 ## Overview
