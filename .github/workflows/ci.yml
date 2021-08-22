@@ -18,5 +18,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
+      - name: Install HTML extra reporter
+        run: npm install -g newman-reporter-htmlextra
+
+      - name: Make directory for test results
+        run: mkdir -p testResults
+
       - name: Run Postman tests
-        run: newman run "JSON Placeholder.postman_collection.json" -e "JSON Placeholder Env.postman_environment.json"
+        run: newman run "JSON Placeholder.postman_collection.json" -e "JSON Placeholder Env.postman_environment.json"  -r htmlextra --reporter-htmlextra-export testResults/htmlreport.html
+
+      - name: Upload the test report
+        uses: actions/upload-artifact@v2
+        with:
+          name: HTMLReport
+          path: testResults
