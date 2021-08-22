@@ -18,16 +18,5 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Setup node v12
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12'
-
-      - name: Install npm
-        run: npm install
-
-      - name: Install Newman
-        run: npm install newman
-
       - name: Run Postman tests
         run: newman run "JSON Placeholder.postman_collection.json" -e "JSON Placeholder Env.postman_environment.json"
